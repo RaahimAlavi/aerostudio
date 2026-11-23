@@ -17,7 +17,7 @@ npm start
 - `server.js` automatically starts a free Cloudflare Trusted HTTPS tunnel so friends can scan the QR without certificate warnings (or join from anywhere via **Remote PC Link**).
 - Android phones automatically see the **Open in App / Download APK** banner for raw 200Hz LAN UDP (`public/downloads/aero-remote.apk`).
 
-## Free Permanent Cloud Deploy — Cloudflare Workers + Durable Objects (\$0, No Credit Card)
+## Free Permanent Cloud Deploy — Cloudflare Workers + Durable Objects ($0, No Credit Card)
 ```bash
 npx wrangler login
 npm run cf:deploy
