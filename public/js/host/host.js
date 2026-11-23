@@ -489,11 +489,14 @@ async function refreshQr() {
     if (netIps.length === 0) {
       const infoRes = await fetch(`/api/info?room=${encodeURIComponent(roomCode)}`);
       const info = await infoRes.json();
-      netIps = info.ips || [{ name: 'local', ip: info.primaryIp }];
+      netIps = Array.isArray(info.ips) && info.ips.length > 0
+        ? info.ips
+        : [{ name: 'cloud', ip: info.primaryIp || '' }];
     }
-    const chosen = netIps[ipIdx % netIps.length];
+    const chosen = netIps[ipIdx % netIps.length] || { name: 'cloud', ip: '' };
+    const ipQuery = chosen.ip ? `ip=${encodeURIComponent(chosen.ip)}&` : '';
     const qrRes = await fetch(
-      `/api/qr?ip=${encodeURIComponent(chosen.ip)}&room=${encodeURIComponent(roomCode)}&mode=${encodeURIComponent(qrLinkMode)}`
+      `/api/qr?${ipQuery}room=${encodeURIComponent(roomCode)}&mode=${encodeURIComponent(qrLinkMode)}`
     );
     const qrData = await qrRes.json();
     latestJoinUrl = qrData.url;

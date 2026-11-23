@@ -354,7 +354,7 @@ export default {
       const roomCode = cleanRoomCode(url.searchParams.get('room')) || makeRoomCode();
       return new Response(
         JSON.stringify({
-          ips: [],
+          ips: [{ name: 'cloud', ip: '' }],
           primaryIp: '',
           httpPort: 443,
           httpsPort: 443,
