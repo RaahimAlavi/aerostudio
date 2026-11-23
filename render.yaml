@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: aero-studio
+    runtime: node
+    plan: free
+    buildCommand: npm install --omit=dev
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: CLOUD_MODE
+        value: "1"
+      - key: NODE_ENV
+        value: production

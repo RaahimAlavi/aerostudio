@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AERO Studio</title>
+  <link rel="stylesheet" href="/css/host.css" />
+</head>
+<body>
+  <!-- Animated 3D Ceramic Loading Splash -->
+  <div id="bootSplash" class="boot-splash">
+    <div class="boot-stage" aria-hidden="true"></div>
+    <h1 class="boot-title">AERO Studio</h1>
+    <p id="bootSub" class="boot-sub">Waking up Mochi and wireless sensors</p>
+    <div class="boot-bar-track">
+      <div id="bootBarFill" class="boot-bar-fill"></div>
+    </div>
+  </div>
+
+  <!-- Live Interactive 3D Companion (Starts centered on boot splash, glides to studio corner!) -->
+  <div id="mochiWidget" class="mochi-widget boot-center" title="Click to say hi to Mochi">
+    <div id="mochiBubble" class="mochi-bubble">Ready to play</div>
+    <canvas id="mochiCanvas"></canvas>
+  </div>
+
+  <!-- 2D Stage Canvas (Hub Ambient + Blade Arena + Strike Table + Air Sketch) -->
+  <canvas id="stageCanvas"></canvas>
+
+  <!-- 3D Three.js Sculpt Studio Canvas -->
+  <canvas id="sculptCanvas"></canvas>
+
+  <!-- 180Hz Floating Motion Reticles Overlay -->
+  <canvas id="cursorCanvas"></canvas>
+
+  <!-- Minimal Single-Line Console Header -->
+  <header id="consoleBar" class="console-bar">
+    <div class="bar-left">
+      <div id="brandHome" class="brand-lockup" data-spring="btn" title="Return to Studio">
+        <span class="brand-mark-dot"></span>
+        <span class="brand-name">AERO</span>
+      </div>
+      <span id="mirrorBadge" class="mirror-badge hidden">SYNCED SCREEN</span>
+      <button id="btnHome" class="console-btn hidden" data-spring="btn" type="button">← Studio</button>
+    </div>
+
+    <div id="gameHud" class="game-hud hidden">
+      <span id="hudMode" class="hud-mode">BLADE ARENA</span>
+      <span class="hud-divider"></span>
+      <div class="hud-stat">
+        <span id="hudStat1Label" class="hud-label">SCORE</span>
+        <span id="hudStat1Val" class="hud-val">0</span>
+      </div>
+      <span class="hud-divider"></span>
+      <div class="hud-stat">
+        <span id="hudStat2Label" class="hud-label">RECORD</span>
+        <span id="hudStat2Val" class="hud-val">0</span>
+      </div>
+    </div>
+
+    <div class="bar-right">
+      <div id="playerSlots" class="player-slots" aria-label="Connected controllers">
+        <span class="slot-pill" data-slot="0"><span class="slot-dot"></span>P1</span>
+        <span class="slot-pill" data-slot="1"><span class="slot-dot"></span>P2</span>
+        <span class="slot-pill" data-slot="2"><span class="slot-dot"></span>P3</span>
+        <span class="slot-pill" data-slot="3"><span class="slot-dot"></span>P4</span>
+      </div>
+      <button id="btnSim" class="console-btn icon-btn" data-spring="btn" data-tip="Mouse Control" aria-label="Mouse Control" type="button">
+        <span class="ph-icon" style="-webkit-mask-image:url('/vendor/icons/mouse-bold.svg');mask-image:url('/vendor/icons/mouse-bold.svg')"></span>
+      </button>
+      <button id="btnDiag" class="console-btn icon-btn" data-spring="btn" data-tip="Diagnostics (D)" aria-label="Diagnostics" type="button">
+        <span class="ph-icon" style="-webkit-mask-image:url('/vendor/icons/pulse-bold.svg');mask-image:url('/vendor/icons/pulse-bold.svg')"></span>
+      </button>
+      <button id="btnTips" class="console-btn icon-btn" data-spring="btn" data-tip="Quick Tips" aria-label="Quick Tips" type="button">
+        <span class="ph-icon" style="-webkit-mask-image:url('/vendor/icons/lightbulb-bold.svg');mask-image:url('/vendor/icons/lightbulb-bold.svg')"></span>
+      </button>
+      <button id="btnPairToggle" class="console-btn icon-btn hidden" data-spring="btn" data-tip="Pair Phones" aria-label="Pair Phones" type="button">
+        <span class="ph-icon" style="-webkit-mask-image:url('/vendor/icons/qr-code-bold.svg');mask-image:url('/vendor/icons/qr-code-bold.svg')"></span>
+      </button>
+      <button id="btnMute" class="console-btn icon-btn" data-spring="btn" data-tip="Mute Sound" aria-label="Mute Sound" type="button">
+        <span id="muteIcon" class="ph-icon" style="-webkit-mask-image:url('/vendor/icons/speaker-high-bold.svg');mask-image:url('/vendor/icons/speaker-high-bold.svg')"></span>
+      </button>
+      <button id="btnFullscreen" class="console-btn icon-btn" data-spring="btn" data-tip="Fullscreen" aria-label="Fullscreen" type="button">
+        <span id="fsIcon" class="ph-icon" style="-webkit-mask-image:url('/vendor/icons/corners-out-bold.svg');mask-image:url('/vendor/icons/corners-out-bold.svg')"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Live Motion & Latency Diagnostics HUD (toggle with Diag button or D key) -->
+  <aside id="diagPanel" class="diag-panel hidden" aria-label="Motion diagnostics">
+    <div class="diag-head">
+      <span class="diag-title">MOTION DIAGNOSTICS</span>
+      <span id="diagTransport" class="diag-pill">IDLE</span>
+    </div>
+    <canvas id="diagGraph" class="diag-graph" width="296" height="58"></canvas>
+    <div class="diag-grid">
+      <div class="diag-kv"><span>IMU HZ</span><strong id="diagSensorHz">--</strong></div>
+      <div class="diag-kv"><span>PC PKT/S</span><strong id="diagRecvHz">--</strong></div>
+      <div class="diag-kv"><span>PC FPS</span><strong id="diagFps">--</strong></div>
+      <div class="diag-kv"><span>AVG GAP</span><strong id="diagAvgGap">--</strong></div>
+      <div class="diag-kv"><span>P95 GAP</span><strong id="diagP95Gap">--</strong></div>
+      <div class="diag-kv"><span>MAX STALL</span><strong id="diagMaxGap">--</strong></div>
+    </div>
+    <div id="diagVerdict" class="diag-verdict">Connect a phone and wave it for 5 seconds to measure packet stalls.</div>
+    <div class="diag-actions">
+      <button id="btnDiagCopy" class="mini-btn primary" type="button">Copy Report</button>
+      <button id="btnDiagReset" class="mini-btn" type="button">Reset</button>
+      <button id="btnDiagClose" class="mini-btn" type="button">Hide</button>
+    </div>
+  </aside>
+
+  <div id="toastStack" class="toast-stack"></div>
+
+  <!-- Mid-Game Floating Pair Card -->
+  <aside id="qrModal" class="qr-modal hidden">
+    <div class="rail-head">
+      <span class="rail-title">Invite Friends (Up to 4)</span>
+      <span id="modalRoomCode" class="room-badge">----</span>
+    </div>
+    <div class="qr-wrap">
+      <div id="modalQrBox" class="qr-box"></div>
+      <div class="qr-meta">
+        <div id="modalQrUrl" class="qr-url">Loading...</div>
+        <div class="qr-note">Scan over Wi-Fi, or share via tunnel URL to play together from anywhere.</div>
+        <div class="qr-actions">
+          <button id="btnCopyModal" class="mini-btn" data-spring="btn" type="button">Copy Phone Link</button>
+          <button id="btnCopyWatchModal" class="mini-btn accent" data-spring="btn" type="button">Remote PC Link</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Minimal Studio Hub -->
+  <main id="hubLayer" class="hub-layer">
+    <section class="hub-main">
+      <div class="hub-header">
+        <div>
+          <h1 class="hub-title">Spatial Studio</h1>
+          <p class="hub-sub">Scan with any phone to link up to four wireless controllers, then point and press A to start.</p>
+        </div>
+        <div id="hubMetaPill" class="hub-meta-pill">0 / 4 linked · <strong id="fpsBadge">180 FPS</strong></div>
+      </div>
+
+      <div id="modeGrid" class="mode-grid">
+        <article class="mode-card" data-mode="blade" data-spring="card" style="--card-dot: #2563EB">
+          <div class="mode-card-top">
+            <span class="mode-num">01</span>
+            <span class="mode-tag">Survival Duel</span>
+          </div>
+          <div class="mode-card-body">
+            <h2 class="mode-name">Blade Arena</h2>
+            <p class="mode-desc">Three lives per player. Slice prisms for combos, dodge spike mines, and outlast friends for the all-time high score.</p>
+          </div>
+          <div class="mode-card-foot">
+            <span class="mode-dot"></span>
+            <span>Point + A to enter</span>
+            <span class="mode-arrow">→</span>
+          </div>
+        </article>
+
+        <article class="mode-card" data-mode="sculpt" data-spring="card" style="--card-dot: #7C3AED">
+          <div class="mode-card-top">
+            <span class="mode-num">02</span>
+            <span class="mode-tag">3D Co-op Studio</span>
+          </div>
+          <div class="mode-card-body">
+            <h2 class="mode-name">Sculpt 3D</h2>
+            <p class="mode-desc">Shape clay, lacquer, and chrome 3D forms together with independent colors, 3D eraser, and co-op clear voting.</p>
+          </div>
+          <div class="mode-card-foot">
+            <span class="mode-dot"></span>
+            <span>Point + A to enter</span>
+            <span class="mode-arrow">→</span>
+          </div>
+        </article>
+
+        <article class="mode-card" data-mode="strike" data-spring="card" style="--card-dot: #059669">
+          <div class="mode-card-top">
+            <span class="mode-num">03</span>
+            <span class="mode-tag">1v1 · 2v2 · AI</span>
+          </div>
+          <div class="mode-card-body">
+            <h2 class="mode-name">Strike Table</h2>
+            <p class="mode-desc">High-speed motion air hockey. Defend your goal, whip your wrist for power smashes, and race to seven goals.</p>
+          </div>
+          <div class="mode-card-foot">
+            <span class="mode-dot"></span>
+            <span>Point + A to enter</span>
+            <span class="mode-arrow">→</span>
+          </div>
+        </article>
+
+        <article class="mode-card" data-mode="sketch" data-spring="card" style="--card-dot: #D97706">
+          <div class="mode-card-top">
+            <span class="mode-num">04</span>
+            <span class="mode-tag">Party Draw &amp; Guess</span>
+          </div>
+          <div class="mode-card-body">
+            <h2 class="mode-name">Air Sketch</h2>
+            <p class="mode-desc">Secret prompts go privately to the artist’s phone while everyone else guesses live from their phones or voice chat.</p>
+          </div>
+          <div class="mode-card-foot">
+            <span class="mode-dot"></span>
+            <span>Point + A to enter</span>
+            <span class="mode-arrow">→</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <aside class="hub-rail">
+      <section class="rail-card">
+        <div class="rail-head">
+          <span class="rail-title">Pair Phone Controller</span>
+          <span id="roomCodeBadge" class="room-badge">----</span>
+        </div>
+        <div class="qr-wrap">
+          <div id="qrBox" class="qr-box"></div>
+          <div class="qr-meta">
+            <div id="qrUrl" class="qr-url">Loading...</div>
+            <div class="qr-note">Trusted HTTPS unlocks 60–120Hz in browser + global friends. Android phones also get the 240Hz APK option.</div>
+            <div class="qr-actions">
+              <button id="btnCopyUrl" class="mini-btn" data-spring="btn" type="button">Copy Link</button>
+              <button id="btnCopyWatch" class="mini-btn accent" data-spring="btn" type="button">Remote PC Link</button>
+              <a class="mini-btn" style="text-decoration:none" href="/downloads/aero-remote.apk" download="aero-remote.apk" data-spring="btn">Android APK</a>
+              <button id="btnCycleIp" class="mini-btn" data-spring="btn" type="button" style="display:none">Switch Link</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="rail-card telemetry-card">
+        <div class="rail-head">
+          <span class="rail-title">Live Motion Stream</span>
+          <span id="streamRateBadge" class="room-badge">IDLE</span>
+        </div>
+        <div class="tele-grid">
+          <div class="tele-cell">
+            <div class="tele-k">YAW</div>
+            <div id="teleYaw" class="tele-v">0°</div>
+          </div>
+          <div class="tele-cell">
+            <div class="tele-k">PITCH</div>
+            <div id="telePitch" class="tele-v">0°</div>
+          </div>
+          <div class="tele-cell">
+            <div class="tele-k">ROLL</div>
+            <div id="teleRoll" class="tele-v">0°</div>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <!-- In-Game Floating Tools Dock (Sculpt 3D & Air Sketch) -->
+  <div id="modeDock" class="mode-dock"></div>
+
+  <!-- Minimal Bottom Control Hint -->
+  <div id="gameHintBar" class="game-hint-bar hidden"></div>
+
+  <!-- Co-op Modals & Podium Overlay Host -->
+  <div id="overlayHost" class="overlay-host"></div>
+
+  <script type="module" src="/js/host/host.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>AERO Remote</title>
+  <link rel="stylesheet" href="/css/controller.css" />
+</head>
+<body>
+  <!-- Pairing & Sensor Activation Gate -->
+  <div id="pairGate" class="pair-gate">
+    <div class="brand-mark">
+      <span class="brand-dot"></span>
+      <span>AERO STUDIO REMOTE</span>
+    </div>
+
+    <h1 class="pair-title">Point at the screen.<br />Tap to link.</h1>
+    <p class="pair-sub">
+      Hold your phone flat like a remote pointed at the display. Enables motion tracking, haptics, and handheld speaker effects.
+    </p>
+
+    <div class="pair-diagram" aria-hidden="true">
+      <div class="mini-phone"></div>
+      <div class="mini-ray"></div>
+      <div class="mini-screen"></div>
+    </div>
+
+    <div id="httpWarn" class="http-warn">
+      Gyroscope requires HTTPS on phones.
+      <a id="httpsSwitchLink" href="#">Switch to HTTPS</a> or continue in Touchpad Mode.
+    </div>
+
+    <button id="btnLink" class="btn-link" type="button">Link in Browser</button>
+
+    <!-- Shown automatically on Android devices when native APK is available -->
+    <div id="androidAppCard" class="android-app-card">
+      <div class="android-app-head">
+        <span class="android-badge">ANDROID 240HZ</span>
+        <span class="android-title">Want zero-lag 240Hz raw UDP?</span>
+      </div>
+      <div class="android-app-actions">
+        <a id="btnOpenApp" class="android-btn primary" href="#">Open in App</a>
+        <a id="btnDownloadApk" class="android-btn" href="/downloads/aero-remote.apk" download="aero-remote.apk">Download APK</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tactile Ceramic Remote Chassis -->
+  <main class="remote-shell">
+    <header class="top-bar">
+      <div class="player-chip">
+        <span id="playerDot" class="player-dot"></span>
+        <span id="playerLabel">CONNECTING</span>
+      </div>
+      <div class="top-actions">
+        <button id="btnSens" class="pill-btn active" type="button">MED</button>
+        <button id="btnSpeaker" class="pill-btn active" type="button">SPK</button>
+        <span id="pingBadge" class="pill-btn">-- ms</span>
+      </div>
+    </header>
+
+    <section class="speaker-deck">
+      <div id="speakerGrille" class="speaker-grille" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="mode-readout">
+        <div id="modeName" class="mode-name">AERO STUDIO</div>
+        <div id="modeHint" class="mode-hint">POINT AT AN EXPERIENCE AND PRESS A</div>
+      </div>
+    </section>
+
+    <!-- Co-op Canvas Clear Vote Banner (appears when a friend clicks Clear in Sculpt 3D!) -->
+    <section id="voteBanner" class="vote-banner">
+      <div id="voteText" class="vote-text">A friend wants to clear the 3D canvas</div>
+      <div class="vote-btns">
+        <button id="btnVoteYes" class="vote-btn yes" type="button">Agree to Clear</button>
+        <button id="btnVoteNo" class="vote-btn no" type="button">Keep Art</button>
+      </div>
+    </section>
+
+    <!-- Dynamic Per-Mode Co-op Controls (Sculpt Colors/Eraser & Air Sketch Secret Word / Guess Box) -->
+    <section id="contextDrawer" class="context-drawer"></section>
+
+    <!-- Live Aim Radar / Touchpad Fallback -->
+    <section id="radarPanel" class="radar-panel">
+      <div class="radar-grid"></div>
+      <span id="touchBadge" class="touch-badge">TOUCHPAD AIM</span>
+      <div id="radarCrosshair" class="radar-crosshair"></div>
+      <div id="radarMeta" class="radar-meta">IMU LOCKED</div>
+      <div class="radar-gmeter">
+        <span id="gLabel">0.0G</span>
+        <div class="g-bar-track">
+          <div id="gBarFill" class="g-bar-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Primary Tactile A + B Controls -->
+    <section class="primary-deck">
+      <div class="btn-a-bezel">
+        <button id="btnA" class="btn-a" type="button">
+          <span class="btn-a-letter">A</span>
+          <span id="btnASub" class="btn-a-sub">SELECT</span>
+        </button>
+      </div>
+
+      <button id="btnB" class="btn-b" type="button">
+        <span class="btn-b-left">
+          <span class="btn-b-badge">B</span>
+          <span id="btnBLabel" class="btn-b-label">BOOST</span>
+        </span>
+        <span class="btn-b-grip" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </section>
+
+    <section class="utility-row">
+      <button id="btnRecenter" class="util-btn" type="button">Recenter</button>
+      <button id="btnHome" class="util-btn" type="button">Studio</button>
+    </section>
+
+    <footer class="led-strip" aria-label="Player indicator LEDs">
+      <span class="led" data-slot="0"></span>
+      <span class="led" data-slot="1"></span>
+      <span class="led" data-slot="2"></span>
+      <span class="led" data-slot="3"></span>
+    </footer>
+  </main>
+
+  <script type="module" src="/js/controller/controller.js"></script>
+</body>
+</html>

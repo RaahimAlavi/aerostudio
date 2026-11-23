@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Local self-signed TLS certs & private keys (never commit!)
+certs/
+
+# Android intermediate build artifacts & private signing keystore (never commit!)
+android-remote/build/
+android-remote/*.keystore
+android-remote/*.jks
+
+# Logs & OS clutter
+*.log
+*.idsig
+.DS_Store
+Thumbs.db

@@ -1,0 +1,22 @@
+{
+  "name": "aero-motion-console",
+  "version": "1.0.0",
+  "description": "AERO Wireless Motion Console — Turn any smartphone into a real-time Wii Remote over Wi-Fi",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:cloud": "CLOUD_MODE=1 node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/plus-jakarta-sans": "^5.3.0",
+    "@phosphor-icons/core": "^2.1.1",
+    "qrcode": "^1.5.4",
+    "selfsigned": "^5.5.0",
+    "three": "^0.187.0",
+    "ws": "^8.18.0"
+  }
+}
