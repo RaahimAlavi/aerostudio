@@ -1,3 +1,12 @@
+---
+title: AERO Studio
+colorFrom: blue
+colorTo: gray
+sdk: docker
+app_port: 3000
+pinned: false
+---
+
 # AERO Studio
 
 Wireless spatial motion playground that turns up to 4 smartphones (iOS & Android) into real-time Wii-style motion controllers — locally over 200Hz LAN UDP or globally with Synced Remote Screens.

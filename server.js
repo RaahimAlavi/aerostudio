@@ -15,6 +15,7 @@ const HTTPS_PORT = Number(process.env.HTTPS_PORT || 3443);
 const UDP_PORT = Number(process.env.UDP_PORT || 41234);
 const IS_CLOUD = Boolean(
   process.env.CLOUD_MODE === '1' ||
+  process.env.SPACE_ID ||
   process.env.RENDER ||
   process.env.RAILWAY_ENVIRONMENT ||
   process.env.FLY_APP_NAME ||
