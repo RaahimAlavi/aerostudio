@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
 
+# Cloudflare Workers generated static bundle & local state
+cf-dist/
+.wrangler/
+
 # Local self-signed TLS certs & private keys (never commit!)
 certs/
 

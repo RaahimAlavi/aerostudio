@@ -1,15 +1,6 @@
----
-title: AERO Studio
-colorFrom: blue
-colorTo: gray
-sdk: docker
-app_port: 3000
-pinned: false
----
-
 # AERO Studio
 
-Wireless spatial motion playground that turns up to 4 smartphones (iOS & Android) into real-time Wii-style motion controllers — locally over 200Hz LAN UDP or globally with Synced Remote Screens.
+Wireless spatial motion playground that turns up to 4 smartphones (iOS & Android) into real-time Wii-style motion controllers — locally over 200Hz LAN UDP or globally on Cloudflare Workers + Durable Objects with Synced Remote Screens.
 
 ## Experiences
 - **Blade Arena** — Competitive 3-life survival katana duel with combos, spike mines, KO elimination, podium, and persistent high scores.
@@ -26,9 +17,16 @@ npm start
 - `server.js` automatically starts a free Cloudflare Trusted HTTPS tunnel so friends can scan the QR without certificate warnings (or join from anywhere via **Remote PC Link**).
 - Android phones automatically see the **Open in App / Download APK** banner for raw 200Hz LAN UDP (`public/downloads/aero-remote.apk`).
 
-## Cloud Deployment (Permanent 24/7 Public URL)
-- **Render (Free Blueprint):** Connect this repo on Render (*New → Blueprint*) — configured via `render.yaml` (`CLOUD_MODE=1`, health check `/healthz`).
-- **Railway / Fly.io / Docker:** Deploy directly using the included `Dockerfile`.
+## Free Permanent Cloud Deploy — Cloudflare Workers + Durable Objects (\$0, No Credit Card)
+```bash
+npx wrangler login
+npm run cf:deploy
+```
+Or connect this GitHub repo directly in the **Cloudflare Dashboard → Workers & Pages → Create → Import a repository** with:
+- **Build command:** `npm run cf:prepare`
+- **Deploy command:** `npx wrangler deploy`
+
+Gives you a permanent 24/7 HTTPS URL (`https://aero-studio.<your-subdomain>.workers.dev`) with zero cold-start sleep, global edge CDN, WebSocket Hibernation Durable Objects, Synced Remote Screens, and APK hosting.
 
 ## Rebuilding the Native Android APK (Optional)
 Requires JDK 17 and Android SDK (`platforms/android-34`, `build-tools/34.0.0`):

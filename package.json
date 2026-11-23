@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "start:cloud": "CLOUD_MODE=1 node server.js"
+    "start:cloud": "CLOUD_MODE=1 node server.js",
+    "cf:prepare": "node scripts/prepare-cf-assets.js",
+    "cf:dev": "node scripts/prepare-cf-assets.js && npx wrangler dev",
+    "cf:deploy": "node scripts/prepare-cf-assets.js && npx wrangler deploy"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -18,5 +21,8 @@
     "selfsigned": "^5.5.0",
     "three": "^0.187.0",
     "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.166.0"
   }
 }
